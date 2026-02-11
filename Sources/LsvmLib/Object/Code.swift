@@ -1,7 +1,8 @@
 extension Object {
-  public final class ByteCodeObject: BaseObject {
-    public var name: String
-    public var fileName: String
+  public final class CodeObject: BaseObject {
+    public var name: StringObject
+    public var fileName: StringObject
+    public var qualname: StringObject
     public var argCount: UInt64
     public var localCount: UInt64
     public var stackSize: UInt64
@@ -10,7 +11,8 @@ extension Object {
     public var constants: ListObject = ListObject()
     public var varnames: ListObject = ListObject()
     public init(
-      name: String, fileName: String, argCount: UInt64, localCount: UInt64, stackSize: UInt64,
+      name: StringObject, fileName: StringObject, qualname: StringObject? = nil, argCount: UInt64,
+      localCount: UInt64, stackSize: UInt64,
       code: [UInt8]
     ) {
       self.name = name
@@ -19,6 +21,11 @@ extension Object {
       self.localCount = localCount
       self.stackSize = stackSize
       self.code = code
+      if let qualname = qualname {
+        self.qualname = qualname
+      } else {
+        self.qualname = name
+      }
     }
   }
 }
