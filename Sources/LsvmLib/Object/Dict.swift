@@ -1,9 +1,15 @@
 extension Object {
   public final class DictObject: BaseObject {
-    var data: [BaseObject: BaseObject] = [:]
-    public override init(){
+    private var data: [BaseObject: BaseObject] = [:]
+    public var size: Int {
+      data.count
     }
-    public subscript (key: BaseObject) -> BaseObject? {
+    public override init() {
+    }
+    public init(data: [BaseObject: BaseObject]) {
+      self.data = data
+    }
+    public subscript(key: BaseObject) -> BaseObject? {
       get {
         return data[key]
       }

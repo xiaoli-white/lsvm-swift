@@ -1,5 +1,5 @@
 extension Object {
-  public final class CustomObject: BaseObject { 
-    
+  public final class CustomObject: BaseObject {
+     
   }
 }

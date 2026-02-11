@@ -1,5 +1,6 @@
 public enum Object {
   public class BaseObject: Equatable, Hashable {
+    public var dict: DictObject? = nil
     public init() {
       if type(of: self) == BaseObject.self {
         fatalError("BaseObject cannot be instantiated")
@@ -13,4 +14,3 @@ public enum Object {
     }
   }
 }
- 
