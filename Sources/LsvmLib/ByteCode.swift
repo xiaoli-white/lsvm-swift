@@ -17,7 +17,14 @@ public enum ByteCode: UInt8 {
   case JUMP_ABSOLUTE
   case JUMP_FORWARD
   case JUMP_BACKWARD
-
+  case LOAD_NAME
+  case STORE_NAME
+  case LOAD_LOCAL
+  case STORE_LOCAL
+  case LOAD_GLOBAL
+  case STORE_GLOBAL
+  case LOAD_ATTR
+  case STORE_ATTR
   public enum BinaryOp: UInt8 {
     case ADD = 0x00
     case SUB

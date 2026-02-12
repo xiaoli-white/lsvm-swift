@@ -13,12 +13,21 @@ let package = Package(
         ),
         .executable(name: "lsvm", targets: ["lsvm"])
     ],
+    dependencies: [
+        .package(
+            url: "https://github.com/apple/swift-collections.git",
+            from: "1.3.0"
+        )
+    ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "LsvmLib",
-            dependencies: []
+            dependencies: [
+                .product(name: "Collections", package: "swift-collections")
+            ],
+            linkerSettings: [
+                .linkedLibrary("m")
+            ]
         ),
         .executableTarget(
             name: "lsvm",

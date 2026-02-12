@@ -4,7 +4,7 @@ public final class Interpreter {
 
   }
   public func run(code: Object.CodeObject) {
-    let frame = Object.FrameObject(code: code)
+    let frame = Object.FrameObject(code: code, builtins: Builtins.getBuiltins())
     evalFrame(frame)
   }
   public func evalFrame(_ frame: Object.FrameObject) {
@@ -29,14 +29,8 @@ public final class Interpreter {
         push(Object.IntegerObject(value: Int64(arg)))
       case .MAKE_FUNCTION:
         let codeObject = pop() as! Object.CodeObject
-        let builtins = Builtins.getBuiltins()
-        let builtinsDict = Object.DictObject()
-        for (key, value) in builtins {
-          let s = Object.StringObject(key)
-          builtinsDict[s] = Object.NativeFunctionObject(name: s, function: value)
-        }
         let function = Object.FunctionObject(
-          code: codeObject, globals: currentFrame!.globals, builtins: builtinsDict)
+          code: codeObject, globals: currentFrame!.globals, builtins: Builtins.getBuiltins())
         push(function)
       case .BINARY_OP:
         let op = ByteCode.BinaryOp(rawValue: currentFrame!.code.code[currentFrame!.pc])!
@@ -56,8 +50,6 @@ public final class Interpreter {
           setTop(left.mod(right))
         case .POW:
           setTop(left.pow(right))
-        default:
-          break
         }
       case .COMPARE_OP:
         let op = ByteCode.CompareOp(rawValue: currentFrame!.code.code[currentFrame!.pc])!
@@ -130,6 +122,18 @@ public final class Interpreter {
         let offset = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
         currentFrame!.pc += 1
         currentFrame!.pc -= Int(offset)
+      case .LOAD_NAME:
+        arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        let name = currentFrame!.code.varnames[Object.IntegerObject(value: Int64(arg))]!as! Object.StringObject
+        var value = currentFrame!.locals[name]
+        if value == nil {
+          value = currentFrame!.globals[name]
+        }
+        if value == nil {
+          value = currentFrame!.builtins[name]
+        }
+        push(value!)
       default:
         break
       }
