@@ -15,18 +15,11 @@ public enum ByteCode: UInt8 {
 
   public enum BinaryOp: UInt8 {
     case ADD = 0x00
-    case SUBTRACT
-    case MULTIPLY
-    case DIVIDE
-    case MODULO
-    case POWER
-    case LEFT_SHIFT
-    case RIGHT_SHIFT
-    case BIT_AND
-    case BIT_OR
-    case BIT_XOR
-    case INPLACE_ADD
-    case INPLACE_SUBTRACT
+    case SUB
+    case MUL
+    case DIV
+    case MOD
+    case POW
   }
   public enum CompareOp: UInt8 {
     case EQUAL = 0x00

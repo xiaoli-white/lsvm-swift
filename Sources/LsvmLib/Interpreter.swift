@@ -46,15 +46,15 @@ public final class Interpreter {
         switch op {
         case .ADD:
           setTop(left.add(right))
-        case .SUBTRACT:
+        case .SUB:
           setTop(left.sub(right))
-        case .MULTIPLY:
+        case .MUL:
           setTop(left.mul(right))
-        case .DIVIDE:
+        case .DIV:
           setTop(left.div(right))
-        case .MODULO:
+        case .MOD:
           setTop(left.mod(right))
-        case .POWER:
+        case .POW:
           setTop(left.pow(right))
         default:
           break
