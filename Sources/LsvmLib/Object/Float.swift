@@ -1,6 +1,6 @@
 public extension Object {
   final class FloatObject: BaseObject {
-    public var value: Double
+    public let value: Double
     public init(value: Double) {
       self.value = value
       super.init()

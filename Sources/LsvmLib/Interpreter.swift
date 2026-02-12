@@ -115,25 +115,25 @@ public final class Interpreter {
     }
     currentFrame = nil
   }
-  var stackSize: UInt64 {
+  public func stackSize() -> UInt64 {
     return currentFrame!.code.stackSize
   }
 
-  var stackDepth: UInt64 {
+  public func stackDepth() -> UInt64 {
     let stackAddr = UInt64(bitPattern: Int64(UInt(bitPattern: currentFrame!.stack)))
     let baseAddr = UInt64(bitPattern: Int64(UInt(bitPattern: currentFrame!.stackBase)))
     return UInt64(
       (stackAddr - baseAddr) / UInt64(MemoryLayout<UnsafeMutablePointer<Object.BaseObject>>.size))
   }
 
-  var isStackEmpty: Bool {
+  public func isStackEmpty() -> Bool {
     return currentFrame!.stack == currentFrame!.stackBase
   }
   public func top() -> Object.BaseObject {
     return currentFrame!.stack[-1]
   }
   public func second() -> Object.BaseObject {
-    return currentFrame!.stack[-2]
+    currentFrame!.stack[-2]
   }
   public func setTop(_ x: Object.BaseObject) {
     currentFrame!.stack[-1] = x
