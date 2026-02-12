@@ -43,12 +43,12 @@ extension Object {
     public func clear() {
       data.removeAll()
     }
-    public subscript(index: Int) -> BaseObject? {
+    public subscript(index: IntegerObject) -> BaseObject? {
       get {
-        return data[index]
+        return data[Int(index.value)]
       }
       set(newValue) {
-        data[index] = newValue ?? NullObject.instance
+        data[Int(index.value)] = newValue ?? NullObject.instance
       }
     }
   }

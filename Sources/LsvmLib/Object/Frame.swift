@@ -10,6 +10,7 @@ extension Object {
       self.code = code
       self.parent = parent
       self.stackBase = UnsafeMutablePointer<BaseObject>.allocate(capacity: Int(code.stackSize))
+      self.stackBase.initialize(repeating: NullObject.instance, count: Int(code.stackSize))
       self.stack = self.stackBase
     }
     deinit {
