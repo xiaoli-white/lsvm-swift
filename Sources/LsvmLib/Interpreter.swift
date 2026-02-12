@@ -42,7 +42,7 @@ public final class Interpreter {
         let op = ByteCode.BinaryOp(rawValue: currentFrame!.code.code[currentFrame!.pc])!
         currentFrame!.pc += 1
         let right = pop()
-        let left = top
+        let left = top()
         switch op {
         case .ADD:
           setTop(left.add(right))
@@ -59,10 +59,29 @@ public final class Interpreter {
         default:
           break
         }
+      case .COMPARE_OP:
+        let op = ByteCode.CompareOp(rawValue: currentFrame!.code.code[currentFrame!.pc])!
+        currentFrame!.pc += 1
+        let right = pop()
+        let left = top()
+        switch op {
+        case .EQUAL:
+          setTop(left.equal(right))
+        case .NOT_EQUAL:
+          setTop(left.notEqual(right))
+        case .LESS:
+          setTop(left.less(right))
+        case .LESS_EQUAL:
+          setTop(left.lessEqual(right))
+        case .GREATER:
+          setTop(left.greater(right))
+        case .GREATER_EQUAL:
+          setTop(left.greaterEqual(right))
+        }
       case .POP_TOP:
         let _ = pop()
       case .DUP_TOP:
-        push(top)
+        push(top())
       case .CALL:
         print(pop())
       case .RETURN_VALUE:
@@ -110,10 +129,10 @@ public final class Interpreter {
   var isStackEmpty: Bool {
     return currentFrame!.stack == currentFrame!.stackBase
   }
-  public var top: Object.BaseObject {
+  public func top() -> Object.BaseObject {
     return currentFrame!.stack[-1]
   }
-  public var second: Object.BaseObject {
+  public func second() -> Object.BaseObject {
     return currentFrame!.stack[-2]
   }
   public func setTop(_ x: Object.BaseObject) {

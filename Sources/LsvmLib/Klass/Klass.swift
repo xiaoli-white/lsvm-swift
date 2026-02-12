@@ -17,4 +17,22 @@ public class Klass {
   public func pow(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject) -> Object.BaseObject {
     fatalError("")
   }
+  public func equal(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject) -> Object.BaseObject {
+    fatalError("")
+  }
+  public func notEqual(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject) -> Object.BaseObject {
+    fatalError("")
+  }
+  public func less(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject) -> Object.BaseObject {
+    fatalError("")
+  }
+  public func lessEqual(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject) -> Object.BaseObject {
+    fatalError("")
+  }
+  public func greater(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject) -> Object.BaseObject {
+    fatalError("")
+  }
+  public func greaterEqual(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject) -> Object.BaseObject {
+    fatalError("")
+  }
 }

@@ -25,6 +25,24 @@ public enum Object {
     public final func pow(_ rhs: BaseObject) -> BaseObject {
       klass!.pow(self, rhs)
     }
+    public final func equal(_ rhs: BaseObject) -> BaseObject {
+      klass!.equal(self, rhs)
+    }
+    public final func notEqual(_ rhs: BaseObject) -> BaseObject {
+      klass!.notEqual(self, rhs)
+    }
+    public final func less(_ rhs: BaseObject) -> BaseObject {
+      klass!.less(self, rhs)
+    }
+    public final func lessEqual(_ rhs: BaseObject) -> BaseObject {
+      klass!.lessEqual(self, rhs)
+    }
+    public final func greater(_ rhs: BaseObject) -> BaseObject {
+      klass!.greater(self, rhs)
+    }
+    public final func greaterEqual(_ rhs: BaseObject) -> BaseObject {
+      klass!.greaterEqual(self, rhs)
+    }
     public var description: String {
       return "BaseObject"
     }

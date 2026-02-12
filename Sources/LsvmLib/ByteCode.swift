@@ -5,6 +5,7 @@ public enum ByteCode: UInt8 {
   case PUSH_SMALL_INT
   case MAKE_FUNCTION
   case BINARY_OP
+  case COMPARE_OP
   case POP_TOP
   case DUP_TOP
   case CALL
@@ -26,5 +27,13 @@ public enum ByteCode: UInt8 {
     case BIT_XOR
     case INPLACE_ADD
     case INPLACE_SUBTRACT
+  }
+  public enum CompareOp: UInt8 {
+    case EQUAL = 0x00
+    case NOT_EQUAL
+    case LESS
+    case LESS_EQUAL
+    case GREATER
+    case GREATER_EQUAL
   }
 }

@@ -1,5 +1,5 @@
-extension Object {
-  public final class IntegerObject: BaseObject {
+public extension Object {
+  final class IntegerObject: BaseObject {
     public var value: Int64
     public init(value: Int64) {
       self.value = value
@@ -10,7 +10,7 @@ extension Object {
       return "\(value)"
     }
   }
-  public final class IntegerKlass: Klass, @unchecked Sendable {
+  final class IntegerKlass: Klass, @unchecked Sendable {
     public static let instance = IntegerKlass()
     private override init() {
     }
@@ -18,6 +18,26 @@ extension Object {
       let x = lhs as! IntegerObject
       let y = rhs as! IntegerObject
       return IntegerObject(value: x.value + y.value)
+    }
+    public override func sub(_ lhs: BaseObject, _ rhs: BaseObject) -> BaseObject {
+      let x = lhs as! IntegerObject
+      let y = rhs as! IntegerObject
+      return IntegerObject(value: x.value - y.value)
+    }
+    public override func mul(_ lhs: BaseObject, _ rhs: BaseObject) -> BaseObject {
+      let x = lhs as! IntegerObject
+      let y = rhs as! IntegerObject
+      return IntegerObject(value: x.value * y.value)
+    }
+    public override func div(_ lhs: BaseObject, _ rhs: BaseObject) -> BaseObject {
+      let x = lhs as! IntegerObject
+      let y = rhs as! IntegerObject
+      return IntegerObject(value: x.value / y.value)
+    }
+    public override func mod(_ lhs: BaseObject, _ rhs: BaseObject) -> BaseObject {
+      let x = lhs as! IntegerObject
+      let y = rhs as! IntegerObject
+      return IntegerObject(value: x.value % y.value)
     }
   }
 }
