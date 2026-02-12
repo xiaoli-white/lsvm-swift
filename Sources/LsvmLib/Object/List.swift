@@ -10,25 +10,25 @@ extension Object {
     public init(capacity: Int = 0) {
       data = [BaseObject](repeating: NullObject.instance, count: capacity)
     }
-    public func add(object: BaseObject) {
-      data.append(object)
+    public func append(_ x: BaseObject) {
+      data.append(x)
     }
-    public func insert(index: Int, object: BaseObject) {
-      data.insert(object, at: index)
+    public func insert(_ x: BaseObject, at index: Int) {
+      data.insert(x, at: index)
     }
-    public func get(index: Int) -> BaseObject? {
+    public func get(_ index: Int) -> BaseObject? {
       return data[index]
     }
-    public func set(index: Int, object: BaseObject) {
+    public func set(_ index: Int, object: BaseObject) {
       data[index] = object
     }
     public func pop() -> BaseObject? {
       return data.popLast()
     }
-    public func removeAt(index: Int) -> BaseObject? {
+    public func remove(at index: Int) -> BaseObject? {
       return data.remove(at: index)
     }
-    public func remove(_ obj: BaseObject) {
+    public func remove(obj: BaseObject) {
       let index = indexOf(obj)
       if index >= 0 {
         data.remove(at: index)
