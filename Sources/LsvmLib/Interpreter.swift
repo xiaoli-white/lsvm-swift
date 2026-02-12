@@ -106,6 +106,20 @@ public final class Interpreter {
         }
         currentFrame = currentFrame!.parent
         push(Object.NullObject.instance)
+      case .JUMP_IF_TRUE:
+        let target = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        let t = pop() as! Object.BooleanObject
+        if t.value {
+          currentFrame!.pc = Int(target)
+        }
+      case .JUMP_IF_FALSE:
+        let target = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        let t = pop() as! Object.BooleanObject
+        if !t.value {
+          currentFrame!.pc = Int(target)
+        }
       default:
         break
       }
@@ -118,14 +132,12 @@ public final class Interpreter {
   public func stackSize() -> UInt64 {
     return currentFrame!.code.stackSize
   }
-
   public func stackDepth() -> UInt64 {
     let stackAddr = UInt64(bitPattern: Int64(UInt(bitPattern: currentFrame!.stack)))
     let baseAddr = UInt64(bitPattern: Int64(UInt(bitPattern: currentFrame!.stackBase)))
     return UInt64(
       (stackAddr - baseAddr) / UInt64(MemoryLayout<UnsafeMutablePointer<Object.BaseObject>>.size))
   }
-
   public func isStackEmpty() -> Bool {
     return currentFrame!.stack == currentFrame!.stackBase
   }

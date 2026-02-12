@@ -12,6 +12,8 @@ public enum ByteCode: UInt8 {
   case RETURN_VALUE
   case RETURN_CONSTANT
   case RETURN_NULL
+  case JUMP_IF_TRUE
+  case JUMP_IF_FALSE
 
   public enum BinaryOp: UInt8 {
     case ADD = 0x00
