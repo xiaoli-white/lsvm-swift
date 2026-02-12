@@ -120,6 +120,16 @@ public final class Interpreter {
         if !t.value {
           currentFrame!.pc = Int(target)
         }
+      case .JUMP_ABSOLUTE:
+        let target = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc = Int(target)
+      case .JUMP_FORWARD:
+        let offset = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += Int(offset) + 1
+      case .JUMP_BACKWARD:
+        let offset = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        currentFrame!.pc -= Int(offset)
       default:
         break
       }
