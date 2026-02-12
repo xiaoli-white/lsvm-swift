@@ -1,5 +1,5 @@
-public extension Object {
-  final class IntegerObject: BaseObject {
+extension Object {
+  public final class IntegerObject: BaseObject {
     public let value: Int64
     public init(value: Int64) {
       self.value = value
@@ -10,7 +10,7 @@ public extension Object {
       return "\(value)"
     }
   }
-  final class IntegerKlass: Klass, @unchecked Sendable {
+  public final class IntegerKlass: Klass, @unchecked Sendable {
     public static let instance = IntegerKlass()
     private override init() {
     }
@@ -38,6 +38,48 @@ public extension Object {
       let x = lhs as! IntegerObject
       let y = rhs as! IntegerObject
       return IntegerObject(value: x.value % y.value)
+    }
+    public override func equal(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject)
+      -> Object.BaseObject
+    {
+      let x = lhs as! IntegerObject
+      let y = rhs as! IntegerObject
+      return x.value == y.value ? BooleanObject.TRUE : BooleanObject.FALSE
+    }
+    public override func notEqual(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject)
+      -> Object.BaseObject
+    {
+      let x = lhs as! IntegerObject
+      let y = rhs as! IntegerObject
+      return x.value != y.value ? BooleanObject.TRUE : BooleanObject.FALSE
+    }
+    public override func less(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject)
+      -> Object.BaseObject
+    {
+      let x = lhs as! IntegerObject
+      let y = rhs as! IntegerObject
+      return x.value < y.value ? BooleanObject.TRUE : BooleanObject.FALSE
+    }
+    public override func lessEqual(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject)
+      -> Object.BaseObject
+    {
+      let x = lhs as! IntegerObject
+      let y = rhs as! IntegerObject
+      return x.value <= y.value ? BooleanObject.TRUE : BooleanObject.FALSE
+    }
+    public override func greater(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject)
+      -> Object.BaseObject
+    {
+      let x = lhs as! IntegerObject
+      let y = rhs as! IntegerObject
+      return x.value > y.value ? BooleanObject.TRUE : BooleanObject.FALSE
+    }
+    public override func greaterEqual(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject)
+      -> Object.BaseObject
+    {
+      let x = lhs as! IntegerObject
+      let y = rhs as! IntegerObject
+      return x.value >= y.value ? BooleanObject.TRUE : BooleanObject.FALSE
     }
   }
 }
