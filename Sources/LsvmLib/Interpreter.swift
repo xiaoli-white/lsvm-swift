@@ -75,7 +75,18 @@ public final class Interpreter {
       case .DUP_TOP:
         push(top())
       case .CALL:
-        print(pop())
+        arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        let args = Object.ListObject()
+        for _ in 0..<Int(arg) {
+          args.append(pop())
+        }
+        let f = pop()
+        if let funcObject = f as? Object.FunctionObject {
+          let frame = Object.FrameObject(
+            code: funcObject.code, builtins: currentFrame!.builtins, parent: currentFrame)
+          currentFrame = frame
+        }
       case .RETURN_VALUE:
         let value = pop()
         if currentFrame!.parent == nil {
@@ -125,7 +136,9 @@ public final class Interpreter {
       case .LOAD_NAME:
         arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
         currentFrame!.pc += 1
-        let name = currentFrame!.code.varnames[Object.IntegerObject(value: Int64(arg))]!as! Object.StringObject
+        let name =
+          currentFrame!.code.names[Object.IntegerObject(value: Int64(arg))]!
+          as! Object.StringObject
         var value = currentFrame!.locals[name]
         if value == nil {
           value = currentFrame!.globals[name]
@@ -134,6 +147,54 @@ public final class Interpreter {
           value = currentFrame!.builtins[name]
         }
         push(value!)
+      case .STORE_NAME:
+        arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        let name =
+          currentFrame!.code.names[Object.IntegerObject(value: Int64(arg))]!
+          as! Object.StringObject
+        let value = pop()
+        if currentFrame!.locals.contains(key: name) {
+          currentFrame!.locals[name] = value
+        } else {
+          currentFrame!.globals[name] = value
+        }
+      case .LOAD_LOCAL:
+        arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        let name =
+          currentFrame!.code.varnames[Object.IntegerObject(value: Int64(arg))]!
+          as! Object.StringObject
+        push(currentFrame!.locals[name]!)
+      case .STORE_LOCAL:
+        arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        let name =
+          currentFrame!.code.varnames[Object.IntegerObject(value: Int64(arg))]!
+          as! Object.StringObject
+        let value = pop()
+        currentFrame!.locals[name] = value
+      case .LOAD_GLOBAL:
+        arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        let name =
+          currentFrame!.code.names[Object.IntegerObject(value: Int64(arg))]! as! Object.StringObject
+        push(currentFrame!.globals[name]!)
+      case .STORE_GLOBAL:
+        arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        let name =
+          currentFrame!.code.names[Object.IntegerObject(value: Int64(arg))]! as! Object.StringObject
+        let value = pop()
+        currentFrame!.globals[name] = value
+      case .BUILD_LIST:
+        arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+        currentFrame!.pc += 1
+        let list = Object.ListObject()
+        for _ in 0 ..< Int(arg) {
+          list.append(pop())
+        }
+        push(list)
       default:
         break
       }

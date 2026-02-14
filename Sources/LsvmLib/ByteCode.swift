@@ -25,6 +25,7 @@ public enum ByteCode: UInt8 {
   case STORE_GLOBAL
   case LOAD_ATTR
   case STORE_ATTR
+  case BUILD_LIST
   public enum BinaryOp: UInt8 {
     case ADD = 0x00
     case SUB
