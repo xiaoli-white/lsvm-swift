@@ -4,6 +4,7 @@ public enum ByteCode: UInt8 {
     case LOAD_CONSTANT
     case PUSH_SMALL_INT
     case MAKE_FUNCTION
+    case SET_OBJECT_ATTRIBUTE
     case BINARY_OP
     case COMPARE_OP
     case POP_TOP
@@ -27,6 +28,9 @@ public enum ByteCode: UInt8 {
     case STORE_ATTR
     case BUILD_LIST
     case BUILD_DICT
+    public enum ObjectAttributeKind: UInt8 {
+        case MAGIC_METHOD = 0x00
+    }
     public enum BinaryOp: UInt8 {
         case ADD = 0x00
         case SUB

@@ -34,6 +34,17 @@ public final class Interpreter: @unchecked Sendable {
                     code: codeObject, globals: currentFrame!.globals,
                     builtins: Builtins.getBuiltins())
                 push(function)
+            case .SET_OBJECT_ATTRIBUTE:
+                let kind = ByteCode.ObjectAttributeKind(
+                    rawValue: currentFrame!.code.code[currentFrame!.pc])!
+                currentFrame!.pc += 1
+                switch kind {
+                case .MAGIC_METHOD:
+                    let value = pop() as! Object.StringObject
+                    let key = pop() as! Object.StringObject
+                    let o = pop()
+                    o.operatorFuncNames[key.value] = value.value
+                }
             case .BINARY_OP:
                 let op = ByteCode.BinaryOp(rawValue: currentFrame!.code.code[currentFrame!.pc])!
                 currentFrame!.pc += 1
