@@ -27,6 +27,12 @@ public enum Object {
                 fatalError("BaseObject cannot be instantiated")
             }
         }
+        public final func getattr(_ name: BaseObject) -> BaseObject {
+            klass!.getattr(self, name)
+        }
+        public final func setattr(_ name: BaseObject, _ value: BaseObject) -> BaseObject {
+            klass!.setattr(self, name, value)
+        }
         public final func add(_ rhs: BaseObject) -> BaseObject {
             klass!.add(self, rhs)
         }

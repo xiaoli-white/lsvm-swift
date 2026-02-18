@@ -12,6 +12,17 @@ public class Klass {
             fatalError("")
         }
     }
+    public func setattr(_ x: Object.BaseObject, _ y: Object.BaseObject, _ z: Object.BaseObject)
+        -> Object.BaseObject
+    {
+        let funcName = Object.StringObject(x.operatorFuncNames["setattr"]!)
+        if let f = x.dict?.get(key: funcName) {
+            return Interpreter.instance.callFunction(f, Object.ListObject([x, y, z]))
+        } else {
+            x.dict?[y] = z
+            return z
+        }
+    }
     public func add(_ lhs: Object.BaseObject, _ rhs: Object.BaseObject) -> Object.BaseObject {
         let funcName = Object.StringObject(lhs.operatorFuncNames["add"]!)
         if let f = lhs.dict?.get(key: funcName) {
