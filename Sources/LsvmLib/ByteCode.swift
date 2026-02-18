@@ -34,6 +34,9 @@ public enum ByteCode: UInt8 {
         case DIV
         case MOD
         case POW
+        case AND
+        case OR
+        case XOR
     }
     public enum CompareOp: UInt8 {
         case EQUAL = 0x00

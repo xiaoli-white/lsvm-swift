@@ -1,6 +1,7 @@
-public final class Interpreter {
+public final class Interpreter: @unchecked Sendable {
+    public static let instance = Interpreter()
     private var currentFrame: Object.FrameObject? = nil
-    public init() {
+    private init() {
 
     }
     public func run(code: Object.CodeObject) {
@@ -51,6 +52,12 @@ public final class Interpreter {
                     setTop(left.mod(right))
                 case .POW:
                     setTop(left.pow(right))
+                case .AND:
+                    setTop(left.and(right))
+                case .OR:
+                    setTop(left.or(right))
+                case .XOR:
+                    setTop(left.xor(right))
                 }
             case .COMPARE_OP:
                 let op = ByteCode.CompareOp(rawValue: currentFrame!.code.code[currentFrame!.pc])!
@@ -83,14 +90,7 @@ public final class Interpreter {
                     args.append(pop())
                 }
                 let f = pop()
-                if let funcObject = f as? Object.FunctionObject {
-                    let frame = Object.FrameObject(
-                        code: funcObject.code, builtins: currentFrame!.builtins,
-                        parent: currentFrame)
-                    currentFrame = frame
-                } else if let nativeFuncObject = f as? Object.NativeFunctionObject {
-                    push(nativeFuncObject.function(args))
-                }
+                push(callFunction(f, args))
             case .RETURN_VALUE:
                 let value = pop()
                 if currentFrame!.parent == nil {
@@ -194,6 +194,10 @@ public final class Interpreter {
                     as! Object.StringObject
                 let value = pop()
                 currentFrame!.globals[name] = value
+            case .LOAD_ATTR:
+                break
+            case .STORE_ATTR:
+                break
             case .BUILD_LIST:
                 arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
                 currentFrame!.pc += 1
@@ -220,6 +224,20 @@ public final class Interpreter {
             }
         }
         currentFrame = nil
+    }
+    public func callFunction(_ f: Object.BaseObject, _ args: Object.ListObject) -> Object.BaseObject
+    {
+        if let funcObject = f as? Object.FunctionObject {
+            let frame = Object.FrameObject(
+                code: funcObject.code, builtins: currentFrame!.builtins,
+                parent: currentFrame)
+            currentFrame = frame
+            return Object.NullObject.instance
+        } else if let nativeFuncObject = f as? Object.NativeFunctionObject {
+            return nativeFuncObject.function(args)
+        } else {
+            fatalError("")
+        }
     }
     public func stackSize() -> UInt64 {
         return currentFrame!.code.stackSize
