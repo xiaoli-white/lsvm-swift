@@ -40,8 +40,8 @@ public final class Interpreter: @unchecked Sendable {
                 currentFrame!.pc += 1
                 switch kind {
                 case .MAGIC_METHOD:
-                    let value = pop() as! Object.StringObject
                     let key = pop() as! Object.StringObject
+                    let value = pop() as! Object.StringObject
                     let o = pop()
                     o.operatorFuncNames[key.value] = value.value
                 }
@@ -206,9 +206,18 @@ public final class Interpreter: @unchecked Sendable {
                 let value = pop()
                 currentFrame!.globals[name] = value
             case .LOAD_ATTR:
-                break
+                arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+                currentFrame!.pc += 1
+                let obj = pop()
+                let name = currentFrame!.code.names[Object.IntegerObject(value: Int64(arg))]!
+                push(obj.getattr(name))
             case .STORE_ATTR:
-                break
+                arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
+                currentFrame!.pc += 1
+                let obj = pop()
+                let value = pop()
+                let name = currentFrame!.code.names[Object.IntegerObject(value: Int64(arg))]!
+                let _ = obj.setattr(name, value)
             case .BUILD_LIST:
                 arg = (arg << 8) | UInt32(currentFrame!.code.code[currentFrame!.pc])
                 currentFrame!.pc += 1
