@@ -11,19 +11,24 @@ let package = Package(
             type: .dynamic,
             targets: ["LsvmLib"]
         ),
-        .executable(name: "lsvm", targets: ["lsvm"])
+        .executable(name: "lsvm", targets: ["lsvm"]),
     ],
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-collections.git",
             from: "1.3.0"
-        )
+        ),
+        .package(
+            url: "https://github.com/xiaoli-white/swift-utils",
+            from: "0.1.1"
+        ),
     ],
     targets: [
         .target(
             name: "LsvmLib",
             dependencies: [
-                .product(name: "Collections", package: "swift-collections")
+                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "SwiftUtils", package: "swift-utils")
             ],
             linkerSettings: [
                 .linkedLibrary("m")
@@ -34,6 +39,6 @@ let package = Package(
             dependencies: [
                 "LsvmLib"
             ]
-        )
+        ),
     ]
 )

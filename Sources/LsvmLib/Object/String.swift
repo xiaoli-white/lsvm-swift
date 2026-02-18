@@ -1,8 +1,12 @@
 extension Object {
-  public final class StringObject: BaseObject {
-    public var value: String
-    public init(_ value: String) {
-      self.value = value
+    public typealias VMString = Unmanaged<StringObject>
+    public static func newString(_ value: String) -> VMString {
+        Unmanaged.passRetained(StringObject(value))
     }
-  }
+    public final class StringObject: BaseObject {
+        public let value: String
+        fileprivate init(_ value: String) {
+            self.value = value
+        }
+    }
 }

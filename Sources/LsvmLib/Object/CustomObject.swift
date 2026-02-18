@@ -3,7 +3,7 @@ extension Object {
         public override init() {
             super.init()
             self.klass = CustomObjectKlass()
-            self.dict = DictObject()
+            self.dict = newDict()
         }
     }
     public final class CustomObjectKlass: Klass, @unchecked Sendable {
