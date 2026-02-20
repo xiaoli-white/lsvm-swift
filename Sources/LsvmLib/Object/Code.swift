@@ -34,8 +34,16 @@ extension Object {
             if let qualname = qualname {
                 self.qualname = qualname
             } else {
-                self.qualname = name
+                self.qualname = name.retain()
             }
+        }
+        deinit {
+            name.release()
+            fileName.release()
+            qualname.release()
+            names.release()
+            constants.release()
+            varnames.release()
         }
     }
 }

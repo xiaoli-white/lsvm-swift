@@ -12,20 +12,24 @@ extension Object {
         public var globals: VMDict = newDict()
         public var locals: VMDict = newDict()
         public var builtins: VMDict
+        public var isEntry: Bool = false
         fileprivate init(code: VMCode, builtins: VMDict, parent: VMFrame?) {
             self.code = code
             self.builtins = builtins
             self.parent = parent
             self.stackBase = UnsafeMutablePointer<VMObject>.allocate(
                 capacity: Int(code.takeUnretainedValue().stackSize))
-            self.stackBase.initialize(
-                repeating: NullObject.instance.to(),
-                count: Int(code.takeUnretainedValue().stackSize))
-
+            for i in 0..<Int(code.takeUnretainedValue().stackSize) {
+                self.stackBase[i] = NullObject.instance.to().retain()
+            }
             self.stack = self.stackBase
         }
         deinit {
-            self.stackBase.deallocate()
+            code.release()
+            stackBase.deallocate()
+            globals.release()
+            locals.release()
+            builtins.release()
         }
     }
 }

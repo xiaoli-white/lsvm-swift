@@ -19,6 +19,12 @@ extension Object {
         fileprivate init(data: OrderedDictionary<VMObject, VMObject>) {
             self.data = data
         }
+        deinit {
+            for (key, value) in data {
+                key.release()
+                value.release()
+            }
+        }
         public func contains(key: VMObject) -> Bool {
             data.keys.contains(key)
         }
@@ -42,10 +48,18 @@ extension Object {
         }
         public subscript(key: VMObject) -> VMObject? {
             get {
-                return data[key]
+                let x = data[key]?.retain()
+                key.release()
+                return x
             }
             set {
-                data[key] = newValue
+                let old = data[key]
+                if old == nil {
+                    let _ = key.retain()
+                }
+                data[key] = newValue?.retain()
+                old?.release()
+                key.release()
             }
         }
     }

@@ -19,71 +19,71 @@ extension Object {
         private override init() {
         }
         public override func add(_ lhs: VMObject, _ rhs: VMObject) -> VMObject {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
             return newInteger(value: x.value + y.value).to()
         }
         public override func sub(_ lhs: VMObject, _ rhs: VMObject) -> VMObject {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
             return newInteger(value: x.value - y.value).to()
         }
         public override func mul(_ lhs: VMObject, _ rhs: VMObject) -> VMObject {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
             return newInteger(value: x.value * y.value).to()
         }
         public override func div(_ lhs: VMObject, _ rhs: VMObject) -> VMObject {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
             return newInteger(value: x.value / y.value).to()
         }
         public override func mod(_ lhs: VMObject, _ rhs: VMObject) -> VMObject {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
             return newInteger(value: x.value % y.value).to()
         }
         public override func equal(_ lhs: Object.VMObject, _ rhs: Object.VMObject)
             -> Object.VMObject
         {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
-            return (x.value == y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to()
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
+            return (x.value == y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to().retain()
         }
         public override func notEqual(_ lhs: Object.VMObject, _ rhs: Object.VMObject)
             -> Object.VMObject
         {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
-            return (x.value != y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to()
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
+            return (x.value != y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to().retain()
         }
         public override func less(_ lhs: Object.VMObject, _ rhs: Object.VMObject)
             -> Object.VMObject
         {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
-            return (x.value < y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to()
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
+            return (x.value < y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to().retain()
         }
         public override func lessEqual(_ lhs: Object.VMObject, _ rhs: Object.VMObject)
             -> Object.VMObject
         {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
-            return (x.value <= y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to()
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
+            return (x.value <= y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to().retain()
         }
         public override func greater(_ lhs: Object.VMObject, _ rhs: Object.VMObject)
             -> Object.VMObject
         {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
-            return (x.value > y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to()
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
+            return (x.value > y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to().retain()
         }
         public override func greaterEqual(_ lhs: Object.VMObject, _ rhs: Object.VMObject)
             -> Object.VMObject
         {
-            let x = lhs.takeUnretainedValue() as! IntegerObject
-            let y = rhs.takeUnretainedValue() as! IntegerObject
-            return (x.value >= y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to()
+            let x = lhs.takeRetainedValue() as! IntegerObject
+            let y = rhs.takeRetainedValue() as! IntegerObject
+            return (x.value >= y.value ? BooleanObject.TRUE : BooleanObject.FALSE).to().retain()
         }
     }
 }
