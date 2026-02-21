@@ -28,6 +28,9 @@ public enum Object {
                 fatalError("VMObject cannot be instantiated")
             }
         }
+        deinit {
+            dict?.release()
+        }
         public final func getattr(_ name: VMObject) -> VMObject {
             klass!.getattr(Unmanaged.passUnretained(self), name)
         }

@@ -26,25 +26,40 @@ extension Object {
             }
         }
         public func contains(key: VMObject) -> Bool {
-            data.keys.contains(key)
+            let result = data.keys.contains(key)
+            key.release()
+            return result
         }
         public func get(index: Int) -> VMObject? {
-            return data.values[index]
+            return data.values[index].retain()
         }
         public func get(key: VMObject) -> VMObject? {
-            data[key]
+            let x = data[key]?.retain()
+            key.release()
+            return x
         }
         public func set(index: Int, value: VMObject) {
-            data.values[index] = value
+            var values = data.values
+            let old = values[index]
+            values[index] = value.retain()
+            old.release()
         }
         public func set(key: VMObject, value: VMObject) {
-            data[key] = value
+            let old = data[key]
+            if old == nil {
+                let _ = key.retain()
+            }
+            data[key] = value.retain()
+            old?.release()
+            key.release()
         }
         public func removeBy(index: Int) {
+            data.values[index].release()
             data.remove(at: index)
         }
         public func removeBy(key: VMObject) {
-            data.removeValue(forKey: key)
+            data.removeValue(forKey: key)?.release()
+            key.release()
         }
         public subscript(key: VMObject) -> VMObject? {
             get {
@@ -52,12 +67,12 @@ extension Object {
                 key.release()
                 return x
             }
-            set {
+            set(value) {
                 let old = data[key]
                 if old == nil {
                     let _ = key.retain()
                 }
-                data[key] = newValue?.retain()
+                data[key] = value?.retain()
                 old?.release()
                 key.release()
             }

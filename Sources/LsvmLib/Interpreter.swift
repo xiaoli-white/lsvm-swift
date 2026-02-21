@@ -2,19 +2,13 @@ import SwiftUtils
 
 public final class Interpreter: @unchecked Sendable {
     public static let instance = Interpreter()
-    private var _currentFrame: Object.VMFrame? = nil
-    private var currentFrame: Object.VMFrame? {
-        get {
-            _currentFrame
-        }
-        set(value) {
-            _currentFrame = value
-            currentFrameValue = value?.takeUnretainedValue()
-            currentCode = currentFrameValue?.code.takeUnretainedValue()
-        }
+    private var currentFrame: Object.VMFrame? = nil
+    private var currentFrameValue: Object.FrameObject? {
+        currentFrame?.takeUnretainedValue()
     }
-    private var currentFrameValue: Object.FrameObject? = nil
-    private var currentCode: Object.CodeObject? = nil
+    private var currentCode: Object.CodeObject?  {
+        currentFrameValue!.code.takeUnretainedValue()
+    }
     private var stack: UnsafeMutablePointer<Object.VMObject>! {
         get {
             currentFrameValue!.stack
@@ -140,21 +134,26 @@ public final class Interpreter: @unchecked Sendable {
             case .DUP_TOP:
                 let x = top()
                 push(x.retain())
+            case .SWAP:
+                let x = top()
+                let y = second()
+                setSecond(x)
+                setTop(y)
             case .CALL:
                 arg = (arg << 8) | UInt32(currentCode!.code[pc])
                 pc += 1
                 let args = Object.newList()
                 let l = args.takeUnretainedValue()
                 for _ in 0..<Int(arg) {
-                    l.append(pop())
+                    let x = pop()
+                    l.append(x)
+                    x.release()
                 }
                 let f = pop()
                 push(callFunction(f, args))
-                f.release()
-                args.release()
             case .RETURN_VALUE:
                 let value = pop()
-                let parent = currentFrameValue!.parent?.retain()
+                let parent = currentFrameValue!.parent
                 let isEntry = currentFrameValue!.isEntry
                 currentFrame!.release()
                 currentFrame = parent
@@ -165,7 +164,7 @@ public final class Interpreter: @unchecked Sendable {
             case .RETURN_CONSTANT:
                 arg = (arg << 8) | UInt32(currentCode!.code[pc])
                 pc += 1
-                let parent = currentFrameValue!.parent?.retain()
+                let parent = currentFrameValue!.parent
                 let isEntry = currentFrameValue!.isEntry
                 let constant = currentCode!.constants.takeUnretainedValue()[
                     Object.newInteger(value: Int64(arg))]!
@@ -176,14 +175,14 @@ public final class Interpreter: @unchecked Sendable {
                 }
                 push(constant)
             case .RETURN_NULL:
-                let parent = currentFrameValue!.parent?.retain()
+                let parent = currentFrameValue!.parent
                 let isEntry = currentFrameValue!.isEntry
                 currentFrame!.release()
                 currentFrame = parent
                 if parent == nil || isEntry {
-                    return Object.NullObject.instance.to()
+                    return Object.NullObject.instance.to().retain()
                 }
-                push(Object.NullObject.instance.to())
+                push(Object.NullObject.instance.to().retain())
             case .JUMP_IF_TRUE:
                 let target =
                     (arg << 8) | UInt32(currentCode!.code[pc])
@@ -315,16 +314,25 @@ public final class Interpreter: @unchecked Sendable {
         }
     }
     public func callFunction(_ f: Object.VMObject, _ args: Object.VMList) -> Object.VMObject {
+        let x: Object.VMObject
         if let funcObject = f.takeUnretainedValue() as? Object.FunctionObject {
             let frame = Object.newFrame(
-                code: funcObject.code, builtins: currentFrameValue!.builtins,
+                code: funcObject.code.retain(), builtins: currentFrameValue!.builtins.retain(),
                 parent: currentFrame)
-            return evalFrame(frame)
+            let varnames = funcObject.code.takeUnretainedValue().varnames.takeUnretainedValue()
+            let locals = frame.takeUnretainedValue().locals.takeUnretainedValue()
+            for (i, arg) in args.takeUnretainedValue().enumerated() {
+                locals[varnames[Object.newInteger(value: Int64(i))]!] = arg
+            }
+            x = evalFrame(frame)
         } else if let nativeFuncObject = f.takeUnretainedValue() as? Object.NativeFunctionObject {
-            return nativeFuncObject.function(args)
+            x = nativeFuncObject.function(args)
         } else {
             fatalError("")
         }
+        args.release()
+        f.release()
+        return x
     }
     public func stackSize() -> UInt64 {
         return currentCode!.stackSize

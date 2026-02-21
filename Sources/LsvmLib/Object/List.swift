@@ -65,6 +65,12 @@ extension Object {
             }
             data.removeAll()
         }
+        public func enumerated() -> EnumeratedSequence<[VMObject]> {
+            return data.enumerated()
+        }
+        public func makeIterator() -> IndexingIterator<[VMObject]> {
+            return data.makeIterator()
+        }
         public subscript(index: VMInteger) -> VMObject? {
             get {
                 return data[Int(index.takeRetainedValue().value)].retain()

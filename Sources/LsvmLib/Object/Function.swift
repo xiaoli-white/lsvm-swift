@@ -16,14 +16,21 @@ extension Object {
             self.code = code
             self.globals = globals
             self.builtins = builtins
-            self.name = code.takeUnretainedValue().name
+            self.name = code.takeUnretainedValue().name.retain()
             if let qualname = qualname {
-                self.qualname = qualname
+                self.qualname = qualname.retain()
             } else {
-                self.qualname = code.takeUnretainedValue().qualname
+                self.qualname = code.takeUnretainedValue().qualname.retain()
             }
             super.init()
             self.dict = newDict()
+        }
+        deinit {
+            code.release()
+            globals.release()
+            builtins.release()
+            name.release()
+            qualname.release()
         }
     }
 }

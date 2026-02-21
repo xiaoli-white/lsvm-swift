@@ -9,6 +9,7 @@ public enum ByteCode: UInt8 {
     case COMPARE_OP
     case POP_TOP
     case DUP_TOP
+    case SWAP
     case CALL
     case RETURN_VALUE
     case RETURN_CONSTANT
